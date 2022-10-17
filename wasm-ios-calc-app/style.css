@@ -1,0 +1,149 @@
+@font-face {
+  font-family: SF Pro Display;
+  src: url(./assets/font/sf-pro-display_regular.woff2) format("woff2");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: SF Pro Text;
+  src: url(./assets/font/sf-pro-text_thin.woff2) format("woff2");
+  font-weight: 100;
+}
+
+span,
+div,
+p,
+button {
+  font-family: SF Pro Display, Arial, Helvetica, sans-serif;
+}
+
+:root {
+  background-color: #424244;
+  position: fixed;
+  inset: 0;
+}
+
+body {
+  margin: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+#calculator {
+  background-color: black;
+  padding: 140px 0px 32px 0px;
+  border-radius: 24px;
+
+  transform: scale(0.7);
+}
+
+#calculator_inner {
+  position: relative;
+  width: 440px;
+  margin: 0px 16px;
+}
+
+#calculator #display_container {
+  position: relative;
+  height: 110px;
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+#calculator #display {
+  font-family: SF Pro Text;
+  font-weight: 100;
+  color: white;
+  letter-spacing: -0.06ch;
+}
+
+#calculator #keypad {
+  position: relative;
+  display: grid;
+  gap: 18px;
+
+  --button-diameter: 96px;
+
+  grid-template-columns: repeat(4, var(--button-diameter));
+  grid-template-rows: repeat(5, var(--button-diameter));
+
+}
+
+#calculator .button {
+  cursor: pointer;
+  border: none;
+  position: relative;
+  font-size: 46px;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(var(--button-diameter) / 2);
+  will-change: background;
+  transition: background 700ms ease-out;
+}
+
+#calculator .button * {
+  user-select: none;
+}
+
+#calculator .button:active,
+#calculator .button.pressed {
+  transition: background 200ms;
+}
+
+#calculator .button .inner {
+  width: var(--button-diameter);
+  height: var(--button-diameter);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#calculator .button svg {
+  width: 30px;
+  height: 30px;
+}
+
+#calculator .button.digit {
+  color: white;
+  background: #333333;
+}
+
+#calculator .button.digit:active,
+#calculator .button.digit.pressed {
+  background: #737373;
+  transition: background 200ms;
+}
+
+#calculator .button.function {
+  color: black;
+  background: #A5A5A5;
+  font-size: 40px;
+}
+
+#calculator .button.function:active,
+#calculator .button.function.pressed {
+  background: #D9D9D9;
+}
+
+#calculator .button.operator {
+  color: white;
+  background: #F1A33B;
+}
+
+#calculator .button.operator.active {
+  color: #F1A33B;
+  background: white;
+}
+
+#calculator .button.operator:active,
+#calculator .button.operator.pressed {
+  background: #F4C995;
+}

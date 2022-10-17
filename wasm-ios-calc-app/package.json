@@ -1,0 +1,20 @@
+{
+  "name": "wasm-ios-calc-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^3.1.0",
+    "vite-plugin-top-level-await": "^1.1.1",
+    "vite-plugin-wasm": "^3.0.0"
+  },
+  "dependencies": {
+    "fitty": "^2.3.6",
+    "wasm-ios-calc": "file:../pkg"
+  }
+}
