@@ -154,11 +154,6 @@ function updateDisplay(calculator) {
 /* Reference to currently active operator button element. */
 let activeOperatorBtnEl = undefined;
 
-
-function animateButtonPressDown(el) {
-
-}
-
 /**
  * Update calculator view.
  * @param {Calculator} calculator 
