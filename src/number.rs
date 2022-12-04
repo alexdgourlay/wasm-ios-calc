@@ -35,9 +35,12 @@ impl Number {
         }
         if self.value_str == "0" {
             self.value_str = number.to_string();
+        } else if self.value_str == "-0" {
+            self.value_str = format!("-{}", number);
         } else {
             self.value_str.push_str(&number.to_string());
         }
+
         self.value = self.value_str.parse().unwrap();
     }
 }
@@ -54,33 +57,30 @@ impl<T: Into<f64> + Display + Copy> From<T> for Number {
 
 impl Display for Number {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // Convert to exponential notation.
+        let exponential_format = format!("{:e}", self.value);
+        
+        // Split exponential into coefficient and exponential parts.
+        let mut split = exponential_format.split('e');
+        let coefficient_str = split.next().unwrap();
+        let exponent_str = split.next().unwrap();
+
+        // Parse exponent into float.
+        let exponent: f64 = exponent_str.parse().unwrap();
+        
         if let Some(sf) = self.sf {
-            // If above the large number limit, display in exponential notation.
-            if self.value.abs() >= 10f64.powi(sf.into()) {
-                let exponent = self.value.log10().abs() as i32;
 
+            // If the exponent is sufficiently large or small, then output exponential notation.
+            if exponent.abs() >= sf.into() {
                 let exponent_str_len = exponent.to_string().len() as u8;
-
-                let coefficient = self.value / 10f64.powi(exponent);
-
-                // Remove length of exponent string from sig figs e.g. "e1" has length of 2.
-                let new_sf = cmp::max(1, sf - (exponent_str_len + 1));
-
-                let mut trunc_coefficient = &*coefficient.to_string();
-
-                // Truncate the output
-                trunc_coefficient = trunc_coefficient.truncate_nums(new_sf.into());
-
-                // Remove trailing zeroes.
-                trunc_coefficient = trunc_coefficient.trim_end_matches('0');
-
-                // Remove trailing decimal
-                if trunc_coefficient.ends_with('.') {
-                    trunc_coefficient =
-                        &trunc_coefficient[0..trunc_coefficient.len() - 1];
-                }
-
-                return write!(f, "{}e{}", trunc_coefficient, exponent.to_string(),);
+                
+                // Calculate the number of digits that should be displayed in the coefficient.
+                let max_coefficient_len = cmp::max(1, sf - (exponent_str_len + 1));
+                
+                let trunc_coefficient = coefficient_str.truncate_nums(max_coefficient_len.into());
+                
+                /* Exponential notation */
+                return write!(f, "{}e{}", trunc_coefficient, exponent_str);
             }
         }
 
@@ -113,5 +113,40 @@ impl Display for Number {
         }
 
         write!(f, "{}", formatted_output)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn formats_large_exp_a() {
+        let number = Number::from(1234567890.);
+        assert_eq!(format!("{}", number), "1.234567e9");
+    }
+
+    #[test]
+    fn formats_large_exp_b() {
+        let number = Number::from(12345678900.);
+        assert_eq!(format!("{}", number), "1.23456e10");
+    }
+
+    #[test]
+    fn formats_large_neg_exp() {
+        let number = Number::from(-1234567890.);
+        assert_eq!(format!("{}", number), "-1.234567e9");
+    }
+
+    #[test]
+    fn formats_small_exp() {
+        let number = Number::from(0.00000000123456789);
+        assert_eq!(format!("{}", number), "1.23456e-9");
+    }
+
+    #[test]
+    fn formats_small_neg_exp() {
+        let number = Number::from(-0.00000000123456789);
+        assert_eq!(format!("{}", number), "-1.23456e-9");
     }
 }

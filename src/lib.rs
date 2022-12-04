@@ -1,9 +1,9 @@
-mod calculator_buffer;
+mod calculator;
 mod number;
 mod operator;
 mod truncate;
 
-use crate::calculator_buffer::CalculatorBuffer;
+use crate::calculator::Calculator;
 use operator::Operator;
 use std::str;
 use wasm_bindgen::prelude::*;
@@ -17,71 +17,66 @@ extern "C" {
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
-pub struct Calculator {
-    buffer: CalculatorBuffer,
+pub struct WasmCalculator {
+    calculator: Calculator,
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
-impl Calculator {
+impl WasmCalculator {
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(constructor))]
     pub fn new() -> Self {
-        Calculator {
-            buffer: CalculatorBuffer::new(),
+        WasmCalculator {
+            calculator: Calculator::new(),
         }
     }
 
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter, js_name=activeOperator))]
     pub fn active_operator(&self) -> Option<String> {
-        self.buffer
+        self.calculator
             .active_operator()
             .and_then(|operator| Some(operator.id.to_owned()))
     }
 
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter, js_name=showAllClear))]
     pub fn show_all_clear(&self) -> bool {
-        self.buffer.cleared()
+        self.calculator.cleared()
     }
 
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter))]
     pub fn output(&mut self) -> String {
-        self.buffer.output().to_string()
+        self.calculator.output().to_string()
     }
 
     #[cfg_attr(target_arch="wasm32", wasm_bindgen(js_name=buttonPressed))]
     pub fn button_pressed(&mut self, id: &str) {
         // If a number was pressed.
         if let Ok(number) = id.parse::<u8>() {
-            self.buffer.submit_number(number);
+            self.calculator.submit_number(number);
             return;
         }
 
         match id {
             "/" | "*" | "-" | "+" => {
                 if let Ok(operator) = Operator::try_from(id) {
-                    self.buffer.submit_operator(operator);
+                    self.calculator.submit_operator(operator);
                 }
             }
             "." => {
-                self.buffer.submit_decimal();
+                self.calculator.submit_decimal();
             }
             "=" => {
-                self.buffer.calculate();
+                self.calculator.calculate();
             }
             "c" => {
-                self.buffer.clear();
+                self.calculator.clear();
             }
             "±" => {
-                let output = self.buffer.output();
-                output.set_value(output.get_value() * -1.);
+                self.calculator.submit_negative();
             }
             "%" => {
-                if self.buffer.display_index > 0 {
-                    self.buffer.calculate();
-                }
-                let output = self.buffer.output();
-                output.set_value(output.get_value() / 100.);
+                self.calculator.submit_percentage();
             }
-            _ => panic!("Unknown button clicked."),
+            _ => log("Unknown button clicked.")
         }
     }
 }
@@ -97,7 +92,7 @@ mod test {
         ( $( $x:expr ),* ) => {
             {
                 #[allow(unused_mut)]
-                let mut calc = Calculator::new();
+                let mut calc = WasmCalculator::new();
                 $(
                     calc.button_pressed($x);
                 )*
@@ -113,7 +108,7 @@ mod test {
 
     #[wasm_bindgen_test]
     fn shows_ac() {
-        let mut calc = Calculator::new();
+        let mut calc = WasmCalculator::new();
         assert!(calc.show_all_clear());
         calc.button_pressed("3");
         calc.button_pressed("+");
@@ -123,14 +118,14 @@ mod test {
 
     #[wasm_bindgen_test]
     fn shows_c() {
-        let mut calc = Calculator::new();
+        let mut calc = WasmCalculator::new();
         calc.button_pressed("3");
         assert!(!calc.show_all_clear());
     }
 
     #[wasm_bindgen_test]
     fn active_operator() {
-        let mut calc = Calculator::new();
+        let mut calc = WasmCalculator::new();
         calc.button_pressed("+");
         assert_eq!(calc.active_operator(), Some("+".to_string()));
     }
@@ -138,6 +133,11 @@ mod test {
     #[wasm_bindgen_test]
     fn sign_function() {
         assert_eq!(calc!("1", "±"), "-1");
+    }
+
+    #[wasm_bindgen_test]
+    fn sign_function_initial() {
+        assert_eq!(calc!("±", "1"), "-1");
     }
 
     #[wasm_bindgen_test]
@@ -260,13 +260,21 @@ mod test {
     }
 
     #[wasm_bindgen_test]
+    fn big_neg_number_exponential_truncation() {
+        assert_eq!(
+            calc!("-", "1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "100", "="),
+            "1.23456e-10"
+        );
+    }
+
+    #[wasm_bindgen_test]
     fn calculate_on_new_operator() {
         assert_eq!(calc!("1", "+", "2", "+"), "3");
     }
 
     #[wasm_bindgen_test]
     fn order_of_ops_new_operator() {
-        let mut calc = Calculator::new();
+        let mut calc = WasmCalculator::new();
         assert!(calc.show_all_clear());
         calc.button_pressed("1");
         calc.button_pressed("+");

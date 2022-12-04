@@ -6,17 +6,17 @@ pub enum Token {
     Operator(Operator),
 }
 
-pub struct CalculatorBuffer {
-    pub values: Vec<Token>,
+pub struct Calculator {
+    pub buffer: Vec<Token>,
     pub display_index: usize,
     cleared: bool,
     editing: bool,
 }
 
-impl CalculatorBuffer {
+impl Calculator {
     pub fn new() -> Self {
-        CalculatorBuffer {
-            values: Vec::from([Token::Number(Number::from(0.))]),
+        Calculator {
+            buffer: Vec::from([Token::Number(Number::from(0.))]),
             display_index: 0,
             cleared: true,
             editing: false,
@@ -30,17 +30,17 @@ impl CalculatorBuffer {
     pub fn clear(&mut self) {
         if self.cleared {
             // All clear
-            *self = CalculatorBuffer::new();
+            *self = Calculator::new();
         } else {
             // Clear
             self.display_index = 0;
-            self.values[0] = Token::Number(Number::from(0.));
+            self.buffer[0] = Token::Number(Number::from(0.));
             self.cleared = true;
         }
     }
 
     pub fn output(&mut self) -> &mut Number {
-        match self.values.get_mut(self.display_index).unwrap() {
+        match self.buffer.get_mut(self.display_index).unwrap() {
             Token::Number(number) => return number,
             _ => {
                 panic!("Display index points to a non-number")
@@ -49,10 +49,10 @@ impl CalculatorBuffer {
     }
 
     fn evaluate(&self) -> Result<Number, &str> {
-        let mut values = self.values.clone();
+        let mut values = self.buffer.clone();
         let mut index = values.len() - 1;
 
-        // Iterate through values to calculate new result.
+        // Iterate through values in reverse to calculate new result.
         while index >= 2 {
             if let Some(Token::Number(number_b)) = values.get(index) {
                 if let Some(Token::Operator(operator)) = values.get(index - 1) {
@@ -67,7 +67,7 @@ impl CalculatorBuffer {
             index -= 2;
         }
         if let Some(Token::Number(result)) = values.first() {
-            return Ok(result.to_owned())
+            return Ok(result.to_owned());
         }
         Err("")
     }
@@ -76,31 +76,31 @@ impl CalculatorBuffer {
         self.editing = false;
 
         // Nothing to calculate.
-        if self.values.len() <= 2 {
+        if self.buffer.len() <= 2 {
             return;
         }
 
         if let Ok(result) = self.evaluate() {
             // Update result.
-            self.values[0] = Token::Number(result);
+            self.buffer[0] = Token::Number(result);
             // Display result.
             self.display_index = 0;
 
-            if self.values.len() > 3 {
-                self.values.drain(1..3);
+            if self.buffer.len() > 3 {
+                self.buffer.drain(1..3);
             }
         }
     }
 
     pub fn active_operator(&self) -> Option<&Operator> {
-        if let Token::Operator(operator) = self.values.last().unwrap() {
+        if let Token::Operator(operator) = self.buffer.last().unwrap() {
             return Some(operator);
         }
         return None;
     }
 
     fn last_operator(&self) -> Option<Operator> {
-        let mut values_clone = self.values.clone();
+        let mut values_clone = self.buffer.clone();
         values_clone.reverse();
         values_clone.iter().find_map(|item| {
             if let Token::Operator(operator) = item {
@@ -113,7 +113,7 @@ impl CalculatorBuffer {
     pub fn submit_operator(&mut self, operator: Operator) {
         self.editing = false;
 
-        match self.values.last_mut() {
+        match self.buffer.last_mut() {
             Some(Token::Operator(active_operator)) => {
                 if active_operator.id != operator.id {
                     *active_operator = operator;
@@ -125,30 +125,30 @@ impl CalculatorBuffer {
                     if let Some(prev_operator) = self.last_operator() {
                         // If the last operator is before in the order of operations (BIDMAS).
                         if prev_operator.before(&operator) {
-                            self.values.push(Token::Operator(operator));
+                            self.buffer.push(Token::Operator(operator));
                             return;
                         }
                     }
                     self.calculate();
                 }
-                self.values.drain(1..self.values.len());
-                self.values.push(Token::Operator(operator));
+                self.buffer.drain(1..self.buffer.len());
+                self.buffer.push(Token::Operator(operator));
             }
             None => panic!("Buffer is empty."),
         }
     }
 
     pub fn submit_number(&mut self, number: u8) {
-        match self.values.last() {
+        match self.buffer.last() {
             Some(Token::Number(..)) => {
                 if self.editing {
                     self.output().concat(number);
                 } else {
-                    self.values[0] = Token::Number(Number::from(number));
+                    self.buffer[0] = Token::Number(Number::from(number));
                 }
             }
             Some(Token::Operator(..)) => {
-                self.values.push(Token::Number(Number::from(number)));
+                self.buffer.push(Token::Number(Number::from(number)));
                 self.display_index += 2;
             }
             None => panic!("Buffer is empty."),
@@ -162,5 +162,19 @@ impl CalculatorBuffer {
             self.submit_number(0);
         }
         self.output().decimalise();
+    }
+
+    pub fn submit_negative(&mut self) {
+        let output = self.output();
+        output.set_value(output.get_value() * -1.);
+        self.editing = true;
+    }
+
+    pub fn submit_percentage(&mut self) {
+        if self.display_index > 0 {
+            self.calculate();
+        }
+        let output = self.output();
+        output.set_value(output.get_value() / 100.);
     }
 }

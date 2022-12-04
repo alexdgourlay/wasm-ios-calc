@@ -1,7 +1,7 @@
 import './style.css'
 import symbols from './symbols';
 import fitty from 'fitty'
-import { Calculator } from 'wasm-ios-calc';
+import {  WasmCalculator } from 'wasm-ios-calc';
 
 /**
  * Create an array of numbers, starting from 1.
@@ -132,7 +132,7 @@ function createKeypadButtons(kepadEl, buttonClickFn) {
 
 /**
  * Outputs to the calculator's display.
- * @param {Calculator} calculator 
+ * @param {WasmCalculator} calculator 
  */
 function updateDisplay(calculator) {
   const displayEl = document.getElementById('display')
@@ -156,7 +156,7 @@ let activeOperatorBtnEl = undefined;
 
 /**
  * Update calculator view.
- * @param {Calculator} calculator 
+ * @param {WasmCalculator} calculator 
  */
 function update(calculator) {
   updateDisplay(calculator);
@@ -185,7 +185,7 @@ function handleButtonPress(calculator, key) {
 
 /**
  * 
- * @param {Calculator} calculator 
+ * @param {WasmCalculator} calculator 
  * @param {string} key 
  */
 function handleKeyPress(calculator, key) {
@@ -199,6 +199,8 @@ function handleKeyPress(calculator, key) {
 
   const pressedButtonEl = document.getElementById(keyString);
   if (pressedButtonEl) {
+
+    /* Apply the pressed appearance to the button. */
     pressedButtonEl.classList.add('pressed');
     pressedButtonEl.ontransitionend = () => {
       pressedButtonEl.classList.remove('pressed');
@@ -210,13 +212,13 @@ function handleKeyPress(calculator, key) {
 
 function create() {
   /* Create wasm Calculator instance. */
-  const calculator = new Calculator();
+  const calculator = new WasmCalculator();
 
   /* Create keypad buttons, supply key press callback. */
   createKeypadButtons(document.getElementById("keypad"), (id) => {
     handleButtonPress(calculator, id)
   });
-  1
+  
   window.addEventListener("keyup", (event) => {
     event.preventDefault();
     handleKeyPress(calculator, event.key)
