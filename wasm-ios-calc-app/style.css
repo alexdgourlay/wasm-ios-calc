@@ -148,14 +148,22 @@ body {
   background: #F4C995;
 }
 
-
 #github-icon {
   width: 36px;
   height: 36px;
   position: fixed;
   bottom: 48px;
-  right: 48px;
+  left: 48px;
   color: #A5A5A5;
+}
+
+@media only screen and (max-width: 600px) {
+  #github-icon {
+    width: 24px;
+    height: 24px;
+    bottom: 24px;
+    left: 24px;
+  }
 }
 
 #github-icon:hover {
