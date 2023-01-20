@@ -23,6 +23,7 @@ pub struct WasmCalculator {
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 impl WasmCalculator {
+    
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(constructor))]
     pub fn new() -> Self {
         WasmCalculator {
@@ -65,10 +66,7 @@ impl WasmCalculator {
                 self.calculator.submit_decimal();
             }
             "=" => {
-                self.calculator.calculate();
-            }
-            "c" => {
-                self.calculator.clear();
+                self.calculator.submit_equals();
             }
             "±" => {
                 self.calculator.submit_negative();
@@ -76,7 +74,10 @@ impl WasmCalculator {
             "%" => {
                 self.calculator.submit_percentage();
             }
-            _ => log("Unknown button clicked.")
+            "c" => {
+                self.calculator.clear();
+            }
+            _ => log("Unknown button pressed.")
         }
     }
 }

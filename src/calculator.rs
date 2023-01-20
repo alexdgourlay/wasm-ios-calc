@@ -48,7 +48,7 @@ impl Calculator {
         }
     }
 
-    fn evaluate(&self) -> Result<Number, &str> {
+    fn calculate(&self) -> Result<Number, &str> {
         let mut values = self.buffer.clone();
         let mut index = values.len() - 1;
 
@@ -72,26 +72,6 @@ impl Calculator {
         Err("")
     }
 
-    pub fn calculate(&mut self) {
-        self.editing = false;
-
-        // Nothing to calculate.
-        if self.buffer.len() <= 2 {
-            return;
-        }
-
-        if let Ok(result) = self.evaluate() {
-            // Update result.
-            self.buffer[0] = Token::Number(result);
-            // Display result.
-            self.display_index = 0;
-
-            if self.buffer.len() > 3 {
-                self.buffer.drain(1..3);
-            }
-        }
-    }
-
     pub fn active_operator(&self) -> Option<&Operator> {
         if let Token::Operator(operator) = self.buffer.last().unwrap() {
             return Some(operator);
@@ -108,6 +88,26 @@ impl Calculator {
             }
             None
         })
+    }
+
+    pub fn submit_equals(&mut self) {
+        self.editing = false;
+
+        // Nothing to calculate.
+        if self.buffer.len() <= 2 {
+            return;
+        }
+
+        if let Ok(result) = self.calculate() {
+            // Update result.
+            self.buffer[0] = Token::Number(result);
+            // Display result.
+            self.display_index = 0;
+
+            if self.buffer.len() > 3 {
+                self.buffer.drain(1..3);
+            }
+        }
     }
 
     pub fn submit_operator(&mut self, operator: Operator) {
@@ -129,7 +129,7 @@ impl Calculator {
                             return;
                         }
                     }
-                    self.calculate();
+                    let _ = self.calculate();
                 }
                 self.buffer.drain(1..self.buffer.len());
                 self.buffer.push(Token::Operator(operator));
@@ -172,7 +172,7 @@ impl Calculator {
 
     pub fn submit_percentage(&mut self) {
         if self.display_index > 0 {
-            self.calculate();
+            let _ = self.calculate();
         }
         let output = self.output();
         output.set_value(output.get_value() / 100.);

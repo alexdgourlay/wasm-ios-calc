@@ -121,6 +121,26 @@ mod tests {
     use super::*;
 
     #[test]
+    fn formats_trailing_zeroes() {
+        let mut number = Number::from(1);
+        number.decimalise();
+        number.concat(0);
+        assert_eq!(format!("{}", number), "1.0");
+    }
+
+    #[test]
+    fn formats_thousands() {
+        let number = Number::from(1234.56);
+        assert_eq!(format!("{}", number), "1,234.56");
+    }
+
+    #[test]
+    fn formats_millions() {
+        let number = Number::from(1234567.89);
+        assert_eq!(format!("{}", number), "1,234,567.89");
+    }
+
+    #[test]
     fn formats_large_exp_a() {
         let number = Number::from(1234567890.);
         assert_eq!(format!("{}", number), "1.234567e9");
