@@ -1,4 +1,3 @@
-import './style.css'
 import symbols from './symbols';
 import fitty from 'fitty'
 import {  WasmCalculator } from 'wasm-ios-calc';
