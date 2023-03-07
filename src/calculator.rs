@@ -129,7 +129,7 @@ impl Calculator {
                             return;
                         }
                     }
-                    let _ = self.calculate();
+                    self.submit_equals();
                 }
                 self.buffer.drain(1..self.buffer.len());
                 self.buffer.push(Token::Operator(operator));
