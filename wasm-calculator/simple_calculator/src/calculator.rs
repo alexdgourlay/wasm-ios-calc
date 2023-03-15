@@ -1,5 +1,6 @@
 use crate::{number::Number, operator::Operator};
 
+/// A token that can be entered into the Calculator buffer.
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     Number(Number),

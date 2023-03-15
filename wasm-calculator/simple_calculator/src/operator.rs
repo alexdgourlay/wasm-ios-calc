@@ -36,7 +36,7 @@ impl TryFrom<&str> for Operator {
                 function: |x, y| x + y,
                 order: 3,
             }),
-            _ => Err("Unknown operator.")
+            _ => Err("Unknown operator."),
         }
     }
 }

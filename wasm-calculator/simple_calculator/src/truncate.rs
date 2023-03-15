@@ -3,7 +3,6 @@ pub trait Truncate {
 }
 
 impl Truncate for str {
-
     // TODO: round last digit.
     fn truncate_nums(&self, max_count: usize) -> &str {
         let mut num_count = 0;

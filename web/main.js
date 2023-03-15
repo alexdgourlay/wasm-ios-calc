@@ -1,6 +1,6 @@
+import fitty from 'fitty';
+import { WasmCalculator } from 'wasm-ios-calc';
 import symbols from './symbols';
-import fitty from 'fitty'
-import {  WasmCalculator } from 'wasm-ios-calc';
 
 /**
  * Create an array of numbers, starting from 1.
@@ -217,7 +217,7 @@ function create() {
   createKeypadButtons(document.getElementById("keypad"), (id) => {
     handleButtonPress(calculator, id)
   });
-  
+
   window.addEventListener("keyup", (event) => {
     event.preventDefault();
     handleKeyPress(calculator, event.key)

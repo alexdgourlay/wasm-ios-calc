@@ -1,10 +1,5 @@
-mod calculator;
-mod number;
-mod operator;
-mod truncate;
+use simple_calculator::{Calculator, Operator};
 
-use crate::calculator::Calculator;
-use operator::Operator;
 use std::str;
 use wasm_bindgen::prelude::*;
 
@@ -23,7 +18,6 @@ pub struct WasmCalculator {
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 impl WasmCalculator {
-    
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(constructor))]
     pub fn new() -> Self {
         WasmCalculator {
@@ -77,7 +71,7 @@ impl WasmCalculator {
             "c" => {
                 self.calculator.clear();
             }
-            _ => log("Unknown button pressed.")
+            _ => log("Unknown button pressed."),
         }
     }
 }

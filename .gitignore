@@ -1,4 +1,2 @@
-/target
-/pkg
-
+.vscode/
 .DS_Store

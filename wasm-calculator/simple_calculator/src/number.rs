@@ -1,7 +1,9 @@
-use crate::truncate::Truncate;
 use num_format::{Locale, ToFormattedString};
 use std::{cmp, fmt::Display};
 
+use crate::truncate::Truncate;
+
+/// Represents a number.
 #[derive(Debug, PartialEq, Clone)]
 pub struct Number {
     value: f64,
@@ -59,7 +61,7 @@ impl Display for Number {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Convert to exponential notation.
         let exponential_format = format!("{:e}", self.value);
-        
+
         // Split exponential into coefficient and exponential parts.
         let mut split = exponential_format.split('e');
         let coefficient_str = split.next().unwrap();
@@ -67,18 +69,17 @@ impl Display for Number {
 
         // Parse exponent into float.
         let exponent: f64 = exponent_str.parse().unwrap();
-        
-        if let Some(sf) = self.sf {
 
+        if let Some(sf) = self.sf {
             // If the exponent is sufficiently large or small, then output exponential notation.
             if exponent.abs() >= sf.into() {
                 let exponent_str_len = exponent.to_string().len() as u8;
-                
+
                 // Calculate the number of digits that should be displayed in the coefficient.
                 let max_coefficient_len = cmp::max(1, sf - (exponent_str_len + 1));
-                
+
                 let trunc_coefficient = coefficient_str.truncate_nums(max_coefficient_len.into());
-                
+
                 /* Exponential notation */
                 return write!(f, "{}e{}", trunc_coefficient, exponent_str);
             }
@@ -118,7 +119,7 @@ impl Display for Number {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use super::Number;
 
     #[test]
     fn formats_trailing_zeroes() {

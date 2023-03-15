@@ -15,6 +15,6 @@
   },
   "dependencies": {
     "fitty": "^2.3.6",
-    "wasm-ios-calc": "file:../pkg"
+    "wasm-ios-calc": "file:../wasm-calculator/pkg"
   }
 }
