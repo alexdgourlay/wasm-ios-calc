@@ -1,5 +1,4 @@
 #![warn(missing_docs)]
-
 //! # A simple calculator implementation.
 //!
 //! The functionality of the calculator is based on that of the iOS calculator and features:
