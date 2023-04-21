@@ -24,6 +24,42 @@ impl Operator {
     pub fn after(&self, other: &Self) -> bool {
         self.order > other.order
     }
+
+    /// Division operator.
+    fn divide() -> Self {
+        Self {
+            id: '/',
+            function: |x, y| x / y,
+            order: 2,
+        }
+    }
+
+    /// Multiplication operator.
+    fn multiply() -> Self {
+        Self {
+            id: '*',
+            function: |x, y| x * y,
+            order: 2,
+        }
+    }
+
+    /// Addition operator.
+    fn add() -> Self {
+        Self {
+            id: '+',
+            function: |x, y| x + y,
+            order: 3,
+        }
+    }
+
+    /// Subtraction operator.
+    fn subtract() -> Self {
+        Self {
+            id: '-',
+            function: |x, y| x - y,
+            order: 3,
+        }
+    }
 }
 
 impl TryFrom<&str> for Operator {
@@ -39,26 +75,10 @@ impl TryFrom<&str> for Operator {
     /// ```
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
-            "/" => Ok(Self {
-                id: '/',
-                function: |x, y| x / y,
-                order: 2,
-            }),
-            "*" => Ok(Self {
-                id: '*',
-                function: |x, y| x * y,
-                order: 2,
-            }),
-            "-" => Ok(Self {
-                id: '-',
-                function: |x, y| x - y,
-                order: 3,
-            }),
-            "+" => Ok(Self {
-                id: '+',
-                function: |x, y| x + y,
-                order: 3,
-            }),
+            "/" => Ok(Operator::divide()),
+            "*" => Ok(Operator::multiply()),
+            "-" => Ok(Operator::subtract()),
+            "+" => Ok(Operator::add()),
             _ => Err("Unknown operator."),
         }
     }
@@ -70,16 +90,16 @@ mod tests {
 
     #[test]
     fn after_true() {
-        let add = Operator::try_from("+").unwrap();
-        let multiply = Operator::try_from("*").unwrap();
+        let add = Operator::add();
+        let multiply = Operator::multiply();
 
         assert!(add.after(&multiply), "Addition comes after multiplication.");
     }
 
     #[test]
     fn after_false() {
-        let add = Operator::try_from("+").unwrap();
-        let multiply = Operator::try_from("*").unwrap();
+        let add = Operator::add();
+        let multiply = Operator::multiply();
 
         assert!(
             !multiply.after(&add),
