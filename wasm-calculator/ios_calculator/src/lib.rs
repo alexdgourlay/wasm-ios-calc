@@ -1,7 +1,7 @@
 #![warn(missing_docs)]
 //! # A simple iOS calculator implementation.
 //!
-//! The functionality of the calculator is based on that of the iOS calculator and features:
+//! The calculator is an implementation of the basic iOS calculator and features:
 //! - DMAS (division, muliplication, addition, subtraction) operations.
 //! - Memory of last calculation.
 //! - Percentage conversion.
