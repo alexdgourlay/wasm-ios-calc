@@ -1,5 +1,5 @@
 #![warn(missing_docs)]
-//! # A simple calculator implementation.
+//! # A simple iOS calculator implementation.
 //!
 //! The functionality of the calculator is based on that of the iOS calculator and features:
 //! - DMAS (division, muliplication, addition, subtraction) operations.
@@ -8,7 +8,7 @@
 //!
 //! Example
 //! ```rust
-//! use simple_calculator::Calculator;
+//! use ios_calculator::Calculator;
 //!
 //! let calc = Calculator::new();
 //! ```

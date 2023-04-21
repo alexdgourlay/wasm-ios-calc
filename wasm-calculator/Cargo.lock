@@ -31,6 +31,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "ios_calculator"
+version = "0.1.0"
+dependencies = [
+ "num-format",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -93,13 +100,6 @@ name = "scoped-tls"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e1cf6437eb19a8f4a6cc0f7dca544973b0b78843adbfeb3683d1a94a0024a294"
-
-[[package]]
-name = "simple_calculator"
-version = "0.1.0"
-dependencies = [
- "num-format",
-]
 
 [[package]]
 name = "syn"
@@ -213,7 +213,7 @@ name = "wasm_calculator"
 version = "0.1.0"
 dependencies = [
  "console_error_panic_hook",
- "simple_calculator",
+ "ios_calculator",
  "wasm-bindgen",
  "wasm-bindgen-test",
  "web-sys",

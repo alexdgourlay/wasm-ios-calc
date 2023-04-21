@@ -1,4 +1,4 @@
-use simple_calculator::{Calculator, Operator};
+use ios_calculator::{Calculator, Operator};
 
 use std::str;
 use wasm_bindgen::prelude::*;

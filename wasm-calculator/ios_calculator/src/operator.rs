@@ -14,7 +14,7 @@ impl Operator {
     ///
     /// Example
     /// ```rust
-    /// use simple_calculator::Operator;
+    /// use ios_calculator::Operator;
     ///
     /// let add = Operator::try_from("+").unwrap();
     /// let multiply = Operator::try_from("*").unwrap();
@@ -33,7 +33,7 @@ impl TryFrom<&str> for Operator {
     ///
     /// Example
     /// ```rust
-    /// use simple_calculator::Operator;
+    /// use ios_calculator::Operator;
     ///
     /// let add = Operator::try_from("+");
     /// ```

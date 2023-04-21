@@ -1,8 +1,8 @@
 [package]
-name = "simple_calculator"
+name = "ios_calculator"
 version = "0.1.0"
 edition = "2021"
-description = "A simple calculator implementation."
+description = "A simple iOS calculator implementation."
 authors = ["Alex Gourlay <alexdgourlay@gmail.com>"]
 repository = "https://github.com/alexdgourlay/wasm-ios-calc/tree/main/wasm-calculator/simple_calculator"
 license = "MIT OR Apache-2.0"
