@@ -1,26 +1,36 @@
+use super::truncate::Truncate;
 use num_format::{Locale, ToFormattedString};
 use std::{cmp, fmt::Display};
 
-use crate::truncate::Truncate;
-
 /// Represents a number.
+///
+/// Stores both a floating point value and string value of a number.
+/// The string value permits leading and trailing zeroes to be displayed.
 #[derive(Debug, PartialEq, Clone)]
 pub struct Number {
+    // The floating point value of the number.
     value: f64,
+    // The string value of the number.
     pub value_str: String,
+    // The number of significant figures used for formatting.
     sf: Option<u8>,
 }
 
 impl Number {
-    pub fn get_value(&self) -> f64 {
+    /// Returns the numeric value of the number.
+    pub fn value(&self) -> f64 {
         self.value
     }
 
+    /// Sets the value of the number.
+    ///
+    /// Updates both the numeric and string value.
     pub fn set_value(&mut self, value: f64) {
         self.value = value;
         self.value_str = value.to_string();
     }
 
+    /// Append a decimal point to the number if valid.
     pub fn decimalise(&mut self) {
         if self.value.fract() != 0. || self.value_str.ends_with('.') {
             return;
@@ -28,9 +38,10 @@ impl Number {
         self.value_str.push('.');
     }
 
-    pub fn concat(&mut self, number: u8) {
+    /// Append a number onto the end of the number.
+    pub fn append(&mut self, number: u8) {
         if let Some(sf) = self.sf {
-            // Can't concatinate a new number beyond the number of significant figures.
+            // Can't append a new number beyond the number of significant figures.
             if self.value_str.len() == sf.into() {
                 return;
             }
@@ -43,6 +54,7 @@ impl Number {
             self.value_str.push_str(&number.to_string());
         }
 
+        // Set the numeric value from the updated string value.
         self.value = self.value_str.parse().unwrap();
     }
 }
@@ -58,6 +70,9 @@ impl<T: Into<f64> + Display + Copy> From<T> for Number {
 }
 
 impl Display for Number {
+    /// Formats the number.
+    ///
+    /// TODO: localise format, for example French format uses comma as decimal point.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // Convert to exponential notation.
         let exponential_format = format!("{:e}", self.value);
@@ -89,7 +104,7 @@ impl Display for Number {
         let mut formatted_output = String::new();
 
         // Get integer component.
-        let int = self.get_value().trunc() as i64;
+        let int = self.value().trunc() as i64;
 
         // Edge case where zero is negative, preserve negative sign.
         if int == 0 && self.value.is_sign_negative() {
@@ -125,7 +140,7 @@ mod tests {
     fn formats_trailing_zeroes() {
         let mut number = Number::from(1);
         number.decimalise();
-        number.concat(0);
+        number.append(0);
         assert_eq!(format!("{}", number), "1.0");
     }
 

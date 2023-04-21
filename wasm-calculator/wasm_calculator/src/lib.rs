@@ -26,7 +26,7 @@ impl WasmCalculator {
     }
 
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(getter, js_name=activeOperator))]
-    pub fn active_operator(&self) -> Option<String> {
+    pub fn active_operator(&self) -> Option<char> {
         self.calculator
             .active_operator()
             .and_then(|operator| Some(operator.id.to_owned()))
@@ -50,12 +50,12 @@ impl WasmCalculator {
             return;
         }
 
+        // If an operator was pressed.
+        if let Ok(operator) = Operator::try_from(id) {
+            self.calculator.submit_operator(operator);
+        }
+
         match id {
-            "/" | "*" | "-" | "+" => {
-                if let Ok(operator) = Operator::try_from(id) {
-                    self.calculator.submit_operator(operator);
-                }
-            }
             "." => {
                 self.calculator.submit_decimal();
             }
@@ -122,7 +122,7 @@ mod test {
     fn active_operator() {
         let mut calc = WasmCalculator::new();
         calc.button_pressed("+");
-        assert_eq!(calc.active_operator(), Some("+".to_string()));
+        assert_eq!(calc.active_operator(), Some('+'));
     }
 
     #[wasm_bindgen_test]
@@ -258,7 +258,7 @@ mod test {
     fn big_neg_number_exponential_truncation() {
         assert_eq!(
             calc!("-", "1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "100", "="),
-            "1.23456e-10"
+            "-1.23456e10"
         );
     }
 
@@ -276,7 +276,7 @@ mod test {
         calc.button_pressed("2");
         calc.button_pressed("*");
         assert_eq!(calc.output(), "2");
-        assert_eq!(calc.active_operator(), Some("*".to_string()));
+        assert_eq!(calc.active_operator(), Some('*'));
     }
 
     #[wasm_bindgen_test]
