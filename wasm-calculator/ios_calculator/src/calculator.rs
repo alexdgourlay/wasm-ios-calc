@@ -219,20 +219,25 @@ impl Calculator {
 mod test {
     use super::*;
 
+    /// Calculator used for testing.
+    fn test_calculator() -> Calculator {
+        Calculator {
+            display_index: 0,
+            cleared: true,
+            editing: false,
+            buffer: vec![],
+        }
+    }
+
     #[test]
     fn last_operator_some() {
         let subtract = Operator::try_from("-").unwrap();
         let add = Operator::try_from("+").unwrap();
-
-        let calc = Calculator {
-            display_index: 0,
-            cleared: true,
-            editing: false,
-            buffer: vec![
-                Token::Operator(subtract.clone()),
-                Token::Operator(add.clone()),
-            ],
-        };
+        let mut calc = test_calculator();
+        calc.buffer = vec![
+            Token::Operator(subtract.clone()),
+            Token::Operator(add.clone()),
+        ];
 
         assert_eq!(
             calc.last_operator(),
@@ -244,13 +249,8 @@ mod test {
     #[test]
     fn last_operator_none() {
         let number_1 = Number::from(1.);
-
-        let calc = Calculator {
-            display_index: 0,
-            cleared: true,
-            editing: false,
-            buffer: vec![Token::Number(number_1.clone())],
-        };
+        let mut calc = test_calculator();
+        calc.buffer = vec![Token::Number(number_1.clone())];
 
         assert_eq!(
             calc.last_operator(),
@@ -261,12 +261,7 @@ mod test {
 
     #[test]
     fn last_operator_empty() {
-        let calc = Calculator {
-            display_index: 0,
-            cleared: true,
-            editing: false,
-            buffer: vec![],
-        };
+        let calc = test_calculator();
 
         assert_eq!(
             calc.last_operator(),
@@ -278,14 +273,8 @@ mod test {
     #[test]
     fn submit_percentage() {
         let number_1 = Number::from(1.);
-
-        let mut calc = Calculator {
-            display_index: 0,
-            cleared: true,
-            editing: false,
-            buffer: vec![Token::Number(number_1.clone())],
-        };
-
+        let mut calc = test_calculator();
+        calc.buffer = vec![Token::Number(number_1.clone())];
         calc.submit_percentage();
 
         assert_eq!(
@@ -298,14 +287,8 @@ mod test {
     #[test]
     fn submit_percentage_negative() {
         let number_1 = Number::from(-1.);
-
-        let mut calc = Calculator {
-            display_index: 0,
-            cleared: true,
-            editing: false,
-            buffer: vec![Token::Number(number_1.clone())],
-        };
-
+        let mut calc = test_calculator();
+        calc.buffer = vec![Token::Number(number_1.clone())];
         calc.submit_percentage();
 
         assert_eq!(

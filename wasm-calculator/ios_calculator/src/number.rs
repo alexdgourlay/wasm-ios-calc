@@ -11,7 +11,7 @@ pub struct Number {
     // The floating point value of the number.
     value: f64,
     // The string value of the number.
-    pub value_str: String,
+    value_str: String,
     // The number of significant figures used for formatting.
     sf: Option<u8>,
 }
@@ -135,6 +135,30 @@ impl Display for Number {
 #[cfg(test)]
 mod tests {
     use super::Number;
+
+    #[test]
+    fn append() {
+        let mut number = Number::from(1);
+        number.append(2);
+        assert_eq!(number.value, 12., "Should append number.");
+    }
+
+    #[test]
+    fn append_decimal() {
+        let mut number = Number::from(1);
+        number.decimalise();
+        number.append(2);
+        assert_eq!(number.value, 1.2, "Should append number after decimal.");
+    }
+
+    #[test]
+    fn decimalise() {
+        let mut number = Number::from(1);
+        number.decimalise();
+
+        assert_eq!(number.value, 1., "Should not effect numeric value.");
+        assert_eq!(number.to_string(), "1.", "Should add decimal to end of number string.");
+    }
 
     #[test]
     fn formats_trailing_zeroes() {
