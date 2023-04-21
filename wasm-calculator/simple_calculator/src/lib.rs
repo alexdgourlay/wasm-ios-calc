@@ -1,14 +1,16 @@
-//! A simple calculator implementation.
+#![warn(missing_docs)]
+
+//! # A simple calculator implementation.
 //!
-//! An implementation of a calculator that features:
+//! The functionality of the calculator is based on that of the iOS calculator and features:
 //! - DMAS (division, muliplication, addition, subtraction) operations.
 //! - Memory of last calculation.
 //! - Percentage conversion.
-//! 
+//!
 //! Example
 //! ```rust
 //! use simple_calculator::Calculator;
-//! 
+//!
 //! let calc = Calculator::new();
 //! ```
 mod calculator;
