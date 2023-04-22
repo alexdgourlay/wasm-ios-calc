@@ -229,21 +229,26 @@ mod test {
         }
     }
 
+    /// The example used across documentation.
     #[test]
-    fn last_operator_some() {
-        let subtract = Operator::try_from("-").unwrap();
-        let add = Operator::try_from("+").unwrap();
-        let mut calc = test_calculator();
-        calc.buffer = vec![
-            Token::Operator(subtract.clone()),
-            Token::Operator(add.clone()),
-        ];
+    fn doc_example_test() {
+        let mut calc = Calculator::new();
+        calc.submit_number(1);
+        calc.submit_decimal();
+        calc.submit_number(2);
+        calc.submit_operator(Operator::add());
+        calc.submit_number(2);
+        calc.submit_equals();
 
         assert_eq!(
-            calc.last_operator(),
-            Some(add),
-            "Should return some last operator in the buffer."
-        );
+            calc.output().value(),
+            3.2,
+        ); 
+
+        assert_eq!(
+            calc.output().to_string(),
+            "3.2",
+        ); 
     }
 
     #[test]

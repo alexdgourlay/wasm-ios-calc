@@ -26,7 +26,7 @@ impl Operator {
     }
 
     /// Division operator.
-    fn divide() -> Self {
+    pub fn divide() -> Self {
         Self {
             id: '/',
             function: |x, y| x / y,
@@ -35,7 +35,7 @@ impl Operator {
     }
 
     /// Multiplication operator.
-    fn multiply() -> Self {
+    pub fn multiply() -> Self {
         Self {
             id: '*',
             function: |x, y| x * y,
@@ -44,7 +44,7 @@ impl Operator {
     }
 
     /// Addition operator.
-    fn add() -> Self {
+    pub fn add() -> Self {
         Self {
             id: '+',
             function: |x, y| x + y,
@@ -53,7 +53,7 @@ impl Operator {
     }
 
     /// Subtraction operator.
-    fn subtract() -> Self {
+    pub fn subtract() -> Self {
         Self {
             id: '-',
             function: |x, y| x - y,
@@ -71,14 +71,17 @@ impl TryFrom<&str> for Operator {
     /// ```rust
     /// use ios_calculator::Operator;
     ///
-    /// let add = Operator::try_from("+");
+    /// let multiply = Operator::try_from("*").unwrap();
+    /// let divide = Operator::try_from("/").unwrap();
+    /// let add = Operator::try_from("+").unwrap();
+    /// let subtract = Operator::try_from("-").unwrap();
     /// ```
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         match value {
-            "/" => Ok(Operator::divide()),
             "*" => Ok(Operator::multiply()),
-            "-" => Ok(Operator::subtract()),
+            "/" => Ok(Operator::divide()),
             "+" => Ok(Operator::add()),
+            "-" => Ok(Operator::subtract()),
             _ => Err("Unknown operator."),
         }
     }
