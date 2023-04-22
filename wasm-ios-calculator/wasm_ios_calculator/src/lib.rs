@@ -12,15 +12,15 @@ extern "C" {
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
-pub struct WasmCalculator {
+pub struct WasmIosCalculator {
     calculator: Calculator,
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
-impl WasmCalculator {
+impl WasmIosCalculator {
     #[cfg_attr(target_arch = "wasm32", wasm_bindgen(constructor))]
     pub fn new() -> Self {
-        WasmCalculator {
+        WasmIosCalculator {
             calculator: Calculator::new(),
         }
     }
@@ -87,7 +87,7 @@ mod test {
         ( $( $x:expr ),* ) => {
             {
                 #[allow(unused_mut)]
-                let mut calc = WasmCalculator::new();
+                let mut calc = WasmIosCalculator::new();
                 $(
                     calc.button_pressed($x);
                 )*
@@ -103,7 +103,7 @@ mod test {
 
     #[wasm_bindgen_test]
     fn shows_ac() {
-        let mut calc = WasmCalculator::new();
+        let mut calc = WasmIosCalculator::new();
         assert!(calc.show_all_clear());
         calc.button_pressed("3");
         calc.button_pressed("+");
@@ -113,14 +113,14 @@ mod test {
 
     #[wasm_bindgen_test]
     fn shows_c() {
-        let mut calc = WasmCalculator::new();
+        let mut calc = WasmIosCalculator::new();
         calc.button_pressed("3");
         assert!(!calc.show_all_clear());
     }
 
     #[wasm_bindgen_test]
     fn active_operator() {
-        let mut calc = WasmCalculator::new();
+        let mut calc = WasmIosCalculator::new();
         calc.button_pressed("+");
         assert_eq!(calc.active_operator(), Some('+'));
     }
@@ -269,7 +269,7 @@ mod test {
 
     #[wasm_bindgen_test]
     fn order_of_ops_new_operator() {
-        let mut calc = WasmCalculator::new();
+        let mut calc = WasmIosCalculator::new();
         assert!(calc.show_all_clear());
         calc.button_pressed("1");
         calc.button_pressed("+");

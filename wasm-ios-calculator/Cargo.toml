@@ -1,5 +1,5 @@
 [workspace]
 members = [
-  "wasm_calculator",
+  "wasm_ios_calculator",
   "ios_calculator",
 ]

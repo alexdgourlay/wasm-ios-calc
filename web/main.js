@@ -1,5 +1,5 @@
 import fitty from 'fitty';
-import { WasmCalculator } from 'wasm-ios-calc';
+import { WasmIosCalculator } from 'wasm-ios-calculator';
 import symbols from './symbols';
 
 /**
@@ -131,7 +131,7 @@ function createKeypadButtons(kepadEl, buttonClickFn) {
 
 /**
  * Outputs to the calculator's display.
- * @param {WasmCalculator} calculator 
+ * @param {WasmIosCalculator} calculator 
  */
 function updateDisplay(calculator) {
   const displayEl = document.getElementById('display')
@@ -155,7 +155,7 @@ let activeOperatorBtnEl = undefined;
 
 /**
  * Update calculator view.
- * @param {WasmCalculator} calculator 
+ * @param {WasmIosCalculator} calculator 
  */
 function update(calculator) {
   updateDisplay(calculator);
@@ -184,7 +184,7 @@ function handleButtonPress(calculator, key) {
 
 /**
  * 
- * @param {WasmCalculator} calculator 
+ * @param {WasmIosCalculator} calculator 
  * @param {string} key 
  */
 function handleKeyPress(calculator, key) {
@@ -211,7 +211,7 @@ function handleKeyPress(calculator, key) {
 
 function create() {
   /* Create wasm Calculator instance. */
-  const calculator = new WasmCalculator();
+  const calculator = new WasmIosCalculator();
 
   /* Create keypad buttons, supply key press callback. */
   createKeypadButtons(document.getElementById("keypad"), (id) => {

@@ -1,5 +1,8 @@
 # Rusty iOS Calculator
 
+[![Latest Version]][crates.io]
+[crates.io]: https://crates.io/crates/ios_calculator
+
 An implementation of the basic iOS calculator featuring:
 - DMAS (division, muliplication, addition, subtraction) operations
 - Decimalisation
