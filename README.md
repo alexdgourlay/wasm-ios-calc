@@ -1,5 +1,7 @@
 # WASM-IOS-CALC
 
+<a href="https://wasm-ios-calc.netlify.app/"><img src="https://img.shields.io/website-up-down-green-red/http/wasm-ios-calc.netlify.app?style=flat-square" alt="Crates.io version" /></a>
+
 An iOS calculator clone for the web, created using rust that is compiled into WebAssembly.
 
 This project comprises of 2 parts: 
