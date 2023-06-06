@@ -17,7 +17,7 @@ pub struct Calculator {
     buffer: Vec<Token>,
     /// The index into the buffer.
     display_index: usize,
-    /// Is the calulcator's buffer cleared?
+    /// Is the calculator's buffer cleared?
     cleared: bool,
     /// Is the calculator in an editing state?
     editing: bool,
